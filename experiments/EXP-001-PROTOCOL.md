@@ -40,9 +40,9 @@ DESIGN PHASE. Data collection pending.
 
 ## Systems
 
-- V-002 (Claude)
-- V-003 (Grok)
-- V-005 (DeepSeek)
+- Claude (Anthropic)
+- Grok (xAI)
+- DeepSeek (DeepSeek)
 - Additional systems as available
 
 ## Contact
