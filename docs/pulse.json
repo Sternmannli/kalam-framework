@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-03-14T15:01:49.562242+00:00",
+  "health": "thriving",
+  "metrics": {
+    "patterns_collected": 5,
+    "unique_contributors": 1,
+    "pattern_categories": 1,
+    "tools_published": 3,
+    "experiments_active": 1,
+    "observations_validated": 0,
+    "detectors_active": 2
+  },
+  "framework": {
+    "gate_function": "D = A \u00d7 L \u00d7 M",
+    "gate_description": "Non-compensatory: any zero collapses the score",
+    "dimensions": [
+      "Agency",
+      "Legibility",
+      "Moral Standing"
+    ],
+    "confidence_scale": "C1 (anecdotal) \u2192 C5 (adversarially tested)"
+  },
+  "privacy": {
+    "personal_data_collected": false,
+    "tracking": false,
+    "cookies": false,
+    "data_model": "patterns only, never persons"
+  }
+}

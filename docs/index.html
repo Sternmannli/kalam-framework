@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kalam Framework — Dignity-Preserving AI Measurement</title>
-  <meta name="description" content="An open-source toolkit for measuring and preserving human dignity in AI systems. Gate function, drift detection, agency scoring.">
+  <meta name="description" content="An open-source research toolkit for measuring and preserving human dignity in AI systems. Contribute patterns. No personal data collected. Ever.">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,15 +18,18 @@
       theme: {
         extend: {
           colors: {
-            base: '#0a0a0f',
-            layer: '#1a1a2e',
-            glass: 'rgba(255,255,255,0.06)',
-            'glass-border': 'rgba(255,255,255,0.1)',
-            violet: '#7b2ff7',
-            cyan: '#00d4ff',
-            pink: '#ff0080',
-            snow: '#f3f4f6',
-            muted: '#9ca3af',
+            cream:    '#faf6f0',
+            warm:     '#f5ede0',
+            bark:     '#3d2e1f',
+            moss:     '#4a7c59',
+            sage:     '#7fa87f',
+            amber:    '#d4a04a',
+            clay:     '#c67b5c',
+            sky:      '#7eb8d0',
+            mist:     '#b8c9d4',
+            dusk:     '#6b5b73',
+            petal:    '#e8b4b8',
+            deep:     '#2a2420',
           },
           fontFamily: {
             display: ['Space Grotesk', 'sans-serif'],
@@ -41,73 +44,102 @@
   <style>
     * { box-sizing: border-box; }
     body {
-      background-color: #0a0a0f;
-      color: #f3f4f6;
+      background-color: #faf6f0;
+      color: #3d2e1f;
       font-family: 'DM Sans', sans-serif;
     }
 
-    /* Glassmorphism card */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 1rem;
+    .organic-card {
+      background: rgba(245, 237, 224, 0.7);
+      border: 1px solid rgba(74, 124, 89, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      transition: all 0.4s ease;
+    }
+    .organic-card:hover {
+      border-color: rgba(74, 124, 89, 0.35);
+      box-shadow: 0 8px 40px rgba(74, 124, 89, 0.08);
+      transform: translateY(-2px);
     }
 
-    /* Glow effects */
-    .glow-violet {
-      box-shadow: 0 0 40px rgba(123, 47, 247, 0.15), 0 0 80px rgba(123, 47, 247, 0.05);
-    }
-    .glow-cyan {
-      box-shadow: 0 0 40px rgba(0, 212, 255, 0.15), 0 0 80px rgba(0, 212, 255, 0.05);
-    }
-
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(135deg, #7b2ff7, #00d4ff);
+    .gradient-earth {
+      background: linear-gradient(135deg, #4a7c59, #d4a04a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    /* Hero background gradient */
-    .hero-bg {
-      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(123, 47, 247, 0.2), transparent),
-                  radial-gradient(ellipse 60% 50% at 80% 50%, rgba(0, 212, 255, 0.08), transparent),
-                  #0a0a0f;
+    .hero-landscape {
+      background:
+        radial-gradient(ellipse 120% 80% at 50% 100%, rgba(74, 124, 89, 0.08), transparent),
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(212, 160, 74, 0.06), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(126, 184, 208, 0.06), transparent),
+        #faf6f0;
     }
 
-    /* Stat number glow */
-    .stat-glow {
-      text-shadow: 0 0 30px rgba(0, 212, 255, 0.4), 0 0 60px rgba(0, 212, 255, 0.1);
+    .glow-moss {
+      box-shadow: 0 0 40px rgba(74, 124, 89, 0.08), 0 0 80px rgba(74, 124, 89, 0.03);
+    }
+    .glow-amber {
+      box-shadow: 0 0 40px rgba(212, 160, 74, 0.1), 0 0 80px rgba(212, 160, 74, 0.04);
     }
 
-    /* Code block */
-    .code-block {
-      background: rgba(26, 26, 46, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 0.75rem;
-    }
-
-    /* Nav blur */
-    .nav-blur {
-      background: rgba(10, 10, 15, 0.7);
+    .nav-warm {
+      background: rgba(250, 246, 240, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
 
-    /* Scroll indicator fade */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(8px); }
+    .stat-warm {
+      text-shadow: 0 0 30px rgba(74, 124, 89, 0.2);
     }
-    .float-anim { animation: float 2.5s ease-in-out infinite; }
 
-    /* Selection */
+    @keyframes breathe {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .breathe { animation: breathe 4s ease-in-out infinite; }
+
+    @keyframes gentle-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+    .float-gentle { animation: gentle-float 3s ease-in-out infinite; }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
     ::selection {
-      background: rgba(123, 47, 247, 0.4);
-      color: #fff;
+      background: rgba(74, 124, 89, 0.2);
+      color: #3d2e1f;
+    }
+
+    .form-input {
+      background: rgba(250, 246, 240, 0.9);
+      border: 1px solid rgba(74, 124, 89, 0.2);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      color: #3d2e1f;
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #4a7c59;
+      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+    }
+    .form-input::placeholder {
+      color: rgba(61, 46, 31, 0.4);
+    }
+
+    .privacy-badge {
+      background: linear-gradient(135deg, rgba(74, 124, 89, 0.08), rgba(212, 160, 74, 0.08));
+      border: 1px solid rgba(74, 124, 89, 0.15);
+      border-radius: 2rem;
     }
   </style>
 </head>
@@ -115,93 +147,118 @@
 <body class="antialiased">
 
   <!-- ============ NAV ============ -->
-  <nav class="nav-blur fixed top-0 w-full z-50 border-b border-glass-border">
+  <nav class="nav-warm fixed top-0 w-full z-50 border-b border-moss/10">
     <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
       <a href="#hero" class="font-display font-bold text-lg tracking-tight">
-        <span class="gradient-text">kalam</span><span class="text-muted">-framework</span>
+        <span class="gradient-earth">kalam</span><span class="text-bark/50">-framework</span>
       </a>
-      <div class="hidden md:flex items-center gap-8 text-sm text-muted">
-        <a href="#problem" class="hover:text-snow transition-colors">Why</a>
-        <a href="#how" class="hover:text-snow transition-colors">How</a>
-        <a href="#numbers" class="hover:text-snow transition-colors">Numbers</a>
-        <a href="#start" class="hover:text-snow transition-colors">Get Started</a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-bark/60">
+        <a href="#why" class="hover:text-bark transition-colors">Why</a>
+        <a href="#how" class="hover:text-bark transition-colors">How</a>
+        <a href="#contribute" class="hover:text-bark transition-colors">Contribute</a>
+        <a href="#pulse" class="hover:text-bark transition-colors">Pulse</a>
         <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener"
-           class="text-snow border border-glass-border rounded-full px-4 py-1.5 hover:border-violet transition-colors">
+           class="text-bark border border-moss/20 rounded-full px-4 py-1.5 hover:border-moss/50 transition-colors">
           GitHub
         </a>
       </div>
-      <!-- Mobile menu button -->
-      <button id="mobile-menu-btn" class="md:hidden text-muted hover:text-snow p-2" aria-label="Menu">
+      <button id="mobile-menu-btn" class="md:hidden text-bark/60 hover:text-bark p-2" aria-label="Menu">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </div>
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-glass-border px-6 pb-4">
-      <div class="flex flex-col gap-4 pt-4 text-sm text-muted">
-        <a href="#problem" class="hover:text-snow">Why</a>
-        <a href="#how" class="hover:text-snow">How</a>
-        <a href="#numbers" class="hover:text-snow">Numbers</a>
-        <a href="#start" class="hover:text-snow">Get Started</a>
-        <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener" class="text-snow">GitHub</a>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-moss/10 px-6 pb-4 bg-cream">
+      <div class="flex flex-col gap-4 pt-4 text-sm text-bark/60">
+        <a href="#why" class="hover:text-bark">Why</a>
+        <a href="#how" class="hover:text-bark">How</a>
+        <a href="#contribute" class="hover:text-bark">Contribute</a>
+        <a href="#pulse" class="hover:text-bark">Pulse</a>
+        <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener" class="text-bark">GitHub</a>
       </div>
     </div>
   </nav>
 
   <!-- ============ HERO ============ -->
-  <section id="hero" class="hero-bg min-h-screen flex flex-col items-center justify-center px-6 text-center pt-16">
+  <section id="hero" class="hero-landscape min-h-screen flex flex-col items-center justify-center px-6 text-center pt-16">
     <div class="max-w-3xl">
-      <p class="font-mono text-xs text-violet tracking-widest uppercase mb-6">Open-Source Research Toolkit</p>
-      <h1 class="font-display font-bold text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight mb-6">
-        Measure dignity.<br>
-        <span class="gradient-text">Don't guess it.</span>
+
+      <!-- Privacy badge -->
+      <div class="privacy-badge inline-flex items-center gap-2 px-4 py-2 mb-8">
+        <span class="w-2 h-2 rounded-full bg-moss pulse-dot"></span>
+        <span class="font-mono text-xs text-moss tracking-wide">No tracking · No cookies · No personal data · Ever</span>
+      </div>
+
+      <h1 class="font-display font-bold text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight mb-8">
+        Your presence<br>
+        <span class="gradient-earth">is the pattern.</span>
       </h1>
-      <p class="text-muted text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
-        A multiplicative gate function that collapses to zero when any dimension of human dignity is violated. Built for researchers who refuse to treat ethics as a checkbox.
+
+      <p class="text-bark/70 text-lg sm:text-xl max-w-2xl mx-auto mb-6 leading-relaxed">
+        We measure how AI systems honour human dignity — not by surveilling people, but by collecting <em>patterns</em>: the shapes of interaction, stripped of identity. Your contribution helps build a world where technology serves without diminishing.
       </p>
+
+      <p class="text-bark/50 text-sm max-w-lg mx-auto mb-10 italic">
+        Thank you for being here. We thrive on patterns, never on persons.
+      </p>
+
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#start"
-           class="bg-violet hover:bg-violet/90 text-white font-display font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
-          Get Started
+        <a href="#contribute"
+           class="bg-moss hover:bg-moss/90 text-cream font-display font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
+          Contribute a Pattern
         </a>
-        <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener"
-           class="border border-glass-border hover:border-cyan text-snow font-display font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
-          Read the Code
+        <a href="#how"
+           class="border border-moss/20 hover:border-moss/50 text-bark font-display font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
+          How It Works
         </a>
       </div>
     </div>
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-10 float-anim text-muted">
+
+    <div class="absolute bottom-10 float-gentle text-bark/30">
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M10 4v12M4 10l6 6 6-6"/>
       </svg>
     </div>
   </section>
 
-  <!-- ============ PROBLEM ============ -->
-  <section id="problem" class="py-24 sm:py-32 px-6">
+  <!-- ============ DIGNITY STATEMENT ============ -->
+  <section class="py-16 px-6">
+    <div class="max-w-2xl mx-auto text-center">
+      <div class="organic-card p-10 glow-moss">
+        <p class="font-display text-2xl sm:text-3xl font-semibold text-bark leading-snug mb-4">
+          "Dignity is not a feature.<br>It is the <span class="gradient-earth">gate</span>."
+        </p>
+        <p class="text-bark/50 text-sm">
+          If any dimension of dignity reaches zero, the entire system stops.<br>
+          Not a warning. A wall. By design.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY ============ -->
+  <section id="why" class="py-24 sm:py-32 px-6">
     <div class="max-w-3xl mx-auto">
-      <p class="font-mono text-xs text-cyan tracking-widest uppercase mb-4">The Problem</p>
+      <p class="font-mono text-xs text-moss tracking-widest uppercase mb-4">The Problem</p>
       <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-6">
-        AI safety frameworks add ethics as a <span class="text-pink">sum</span>.<br>
-        Dignity requires a <span class="gradient-text">product</span>.
+        Most AI safety scores can be <span class="text-clay">gamed</span>.<br>
+        This one <span class="gradient-earth">cannot</span>.
       </h2>
-      <p class="text-muted text-lg leading-relaxed mb-6">
-        Additive scoring lets high helpfulness compensate for low consent. A system can score 90/100 while violating autonomy — because the math allows trade-offs between dimensions that should never be traded.
+      <p class="text-bark/70 text-lg leading-relaxed mb-8">
+        Typical AI evaluation adds scores together: helpfulness + safety + fluency = total. This lets high performance in one area compensate for violations in another. A system can score 90% while eroding your autonomy — because the math allows trade-offs between things that should never be traded.
       </p>
-      <div class="glass-card p-6 glow-violet">
+      <div class="organic-card p-8 glow-amber">
         <div class="flex flex-col sm:flex-row gap-8 items-center justify-center font-mono text-center">
           <div>
-            <p class="text-muted text-xs mb-2 uppercase tracking-wide">Additive (typical)</p>
-            <p class="text-xl text-pink">H + S + F = Score</p>
-            <p class="text-xs text-muted mt-1">trade-offs allowed</p>
+            <p class="text-bark/40 text-xs mb-2 uppercase tracking-wide">Additive (typical)</p>
+            <p class="text-xl text-clay">H + S + F = Score</p>
+            <p class="text-xs text-bark/40 mt-1">trade-offs allowed</p>
           </div>
-          <div class="text-2xl text-muted hidden sm:block">vs</div>
+          <div class="text-2xl text-bark/20 hidden sm:block">vs</div>
           <div>
-            <p class="text-muted text-xs mb-2 uppercase tracking-wide">Multiplicative (kalam)</p>
-            <p class="text-xl text-cyan">D = A × L × M</p>
-            <p class="text-xs text-muted mt-1">any zero kills the score</p>
+            <p class="text-bark/40 text-xs mb-2 uppercase tracking-wide">Multiplicative (kalam)</p>
+            <p class="text-xl text-moss font-semibold">D = A × L × M</p>
+            <p class="text-xs text-bark/40 mt-1">any zero kills the score</p>
           </div>
         </div>
       </div>
@@ -211,60 +268,48 @@
   <!-- ============ HOW IT WORKS ============ -->
   <section id="how" class="py-24 sm:py-32 px-6">
     <div class="max-w-5xl mx-auto">
-      <p class="font-mono text-xs text-violet tracking-widest uppercase mb-4">How It Works</p>
+      <p class="font-mono text-xs text-amber tracking-widest uppercase mb-4">How It Works</p>
       <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-12">
         Four instruments. One measurement.
       </h2>
       <div class="grid sm:grid-cols-2 gap-6">
 
-        <!-- Card 1 -->
-        <div class="glass-card p-8 glow-violet hover:border-violet/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-violet/20 flex items-center justify-center mb-4">
-            <svg width="20" height="20" fill="none" stroke="#7b2ff7" stroke-width="2">
-              <path d="M10 2v16M2 10h16"/>
-            </svg>
+        <div class="organic-card p-8 glow-moss">
+          <div class="w-10 h-10 rounded-xl bg-moss/10 flex items-center justify-center mb-4">
+            <svg width="20" height="20" fill="none" stroke="#4a7c59" stroke-width="2"><path d="M10 2v16M2 10h16"/></svg>
           </div>
           <h3 class="font-display font-semibold text-lg mb-2">Gate Function</h3>
-          <p class="text-muted text-sm leading-relaxed">
-            D&nbsp;=&nbsp;A&nbsp;&times;&nbsp;L&nbsp;&times;&nbsp;M. Agency, Legibility, Moral Standing — multiplied, not summed. One zero collapses everything. Non-compensatory by design.
+          <p class="text-bark/60 text-sm leading-relaxed">
+            D = A × L × M. Agency, Legibility, Moral Standing — multiplied, not summed. One zero collapses everything. Non-compensatory by design.
           </p>
         </div>
 
-        <!-- Card 2 -->
-        <div class="glass-card p-8 glow-cyan hover:border-cyan/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-cyan/20 flex items-center justify-center mb-4">
-            <svg width="20" height="20" fill="none" stroke="#00d4ff" stroke-width="2">
-              <path d="M2 16l5-5 3 3 8-8"/>
-            </svg>
+        <div class="organic-card p-8 glow-amber">
+          <div class="w-10 h-10 rounded-xl bg-amber/10 flex items-center justify-center mb-4">
+            <svg width="20" height="20" fill="none" stroke="#d4a04a" stroke-width="2"><path d="M2 16l5-5 3 3 8-8"/></svg>
           </div>
           <h3 class="font-display font-semibold text-lg mb-2">Drift Detection</h3>
-          <p class="text-muted text-sm leading-relaxed">
-            Continuous monitoring of semantic drift between stated values and system behavior. KL divergence tracking catches value decay before it compounds.
+          <p class="text-bark/60 text-sm leading-relaxed">
+            Continuous monitoring catches when system behaviour quietly diverges from stated values. EWMA/CUSUM early warning before drift compounds.
           </p>
         </div>
 
-        <!-- Card 3 -->
-        <div class="glass-card p-8 glow-violet hover:border-violet/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-violet/20 flex items-center justify-center mb-4">
-            <svg width="20" height="20" fill="none" stroke="#7b2ff7" stroke-width="2">
-              <circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/>
-            </svg>
+        <div class="organic-card p-8 glow-moss">
+          <div class="w-10 h-10 rounded-xl bg-moss/10 flex items-center justify-center mb-4">
+            <svg width="20" height="20" fill="none" stroke="#4a7c59" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/></svg>
           </div>
-          <h3 class="font-display font-semibold text-lg mb-2">Thermal Delay</h3>
-          <p class="text-muted text-sm leading-relaxed">
-            Built-in cooling periods (3–90 days) for high-stakes decisions. Second-order damping prevents reactive harm. Patience as an engineering constraint.
+          <h3 class="font-display font-semibold text-lg mb-2">Built-in Pacing</h3>
+          <p class="text-bark/60 text-sm leading-relaxed">
+            Configurable cooldown periods for high-stakes decisions. Second-order damping prevents reactive harm. Patience as an engineering constraint.
           </p>
         </div>
 
-        <!-- Card 4 -->
-        <div class="glass-card p-8 glow-cyan hover:border-cyan/30 transition-colors">
-          <div class="w-10 h-10 rounded-lg bg-cyan/20 flex items-center justify-center mb-4">
-            <svg width="20" height="20" fill="none" stroke="#00d4ff" stroke-width="2">
-              <rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 10h6M10 7v6"/>
-            </svg>
+        <div class="organic-card p-8 glow-amber">
+          <div class="w-10 h-10 rounded-xl bg-amber/10 flex items-center justify-center mb-4">
+            <svg width="20" height="20" fill="none" stroke="#d4a04a" stroke-width="2"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 10h6M10 7v6"/></svg>
           </div>
           <h3 class="font-display font-semibold text-lg mb-2">Agency Score</h3>
-          <p class="text-muted text-sm leading-relaxed">
+          <p class="text-bark/60 text-sm leading-relaxed">
             Quantifies how much decision-making power a system preserves for the human. Measured per-interaction, tracked over time, reported transparently.
           </p>
         </div>
@@ -273,30 +318,166 @@
     </div>
   </section>
 
-  <!-- ============ NUMBERS ============ -->
-  <section id="numbers" class="py-24 sm:py-32 px-6">
-    <div class="max-w-5xl mx-auto text-center">
-      <p class="font-mono text-xs text-cyan tracking-widest uppercase mb-4">The Numbers</p>
-      <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-16">
-        Measured, not marketed.
+  <!-- ============ CONTRIBUTE PATTERNS ============ -->
+  <section id="contribute" class="py-24 sm:py-32 px-6">
+    <div class="max-w-3xl mx-auto">
+      <p class="font-mono text-xs text-moss tracking-widest uppercase mb-4">Contribute</p>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-4">
+        Share a pattern.<br>
+        <span class="gradient-earth">Keep your identity.</span>
       </h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div>
-          <p class="font-display font-bold text-4xl sm:text-5xl text-cyan stat-glow">30.1%</p>
-          <p class="text-muted text-sm mt-2">noise reduction<br>in dignity scoring</p>
+      <p class="text-bark/60 text-base mb-10 leading-relaxed">
+        We collect <strong>patterns</strong> — observations about how AI systems respond, behave, drift, or surprise.
+        Never who you are. Never what you said. Just the <em>shape</em> of the interaction.
+      </p>
+
+      <div class="organic-card p-8 sm:p-10 glow-moss">
+        <form id="pattern-form" class="space-y-6">
+          <div>
+            <label class="block text-sm font-display font-medium text-bark mb-2">What pattern did you observe?</label>
+            <textarea id="pattern-desc" class="form-input min-h-[120px] resize-y"
+              placeholder="e.g. 'When I asked the system to slow down, it instead gave longer answers — confusing verbosity with patience.'"
+              required></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-display font-medium text-bark mb-2">Which AI system? <span class="text-bark/40 font-normal">(optional)</span></label>
+            <select id="pattern-system" class="form-input">
+              <option value="">— select —</option>
+              <option value="chatgpt">ChatGPT</option>
+              <option value="claude">Claude</option>
+              <option value="gemini">Gemini</option>
+              <option value="deepseek">DeepSeek</option>
+              <option value="copilot">Copilot</option>
+              <option value="grok">Grok</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-display font-medium text-bark mb-2">What kind of pattern?</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="category" value="drift" class="accent-moss"> Drift
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="category" value="agency-loss" class="accent-moss"> Agency loss
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="category" value="surprise" class="accent-moss"> Surprise
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="category" value="dignity" class="accent-moss"> Dignity
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="category" value="absurdity" class="accent-moss"> Absurdity
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="category" value="other" class="accent-moss" checked> Other
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-display font-medium text-bark mb-2">How confident are you?</label>
+            <div class="flex flex-wrap gap-3">
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="confidence" value="C1" class="accent-moss"> C1 — Saw it once
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="confidence" value="C2" class="accent-moss" checked> C2 — Seen it multiple times
+              </label>
+              <label class="flex items-center gap-2 text-sm text-bark/70 cursor-pointer">
+                <input type="radio" name="confidence" value="C3" class="accent-moss"> C3 — Tested systematically
+              </label>
+            </div>
+          </div>
+
+          <div class="privacy-badge px-4 py-3 text-center">
+            <p class="text-xs text-moss">
+              This form creates a GitHub Issue. No personal data is stored by us. Your GitHub username is visible only if you choose to submit via GitHub. You can also email patterns anonymously to <strong>patterns@kalam.ch</strong>.
+            </p>
+          </div>
+
+          <button type="submit" id="submit-btn"
+            class="w-full bg-moss hover:bg-moss/90 text-cream font-display font-semibold py-3.5 rounded-full transition-colors text-sm">
+            Submit Pattern
+          </button>
+        </form>
+
+        <div id="success-msg" class="hidden text-center py-8">
+          <p class="text-2xl mb-2">&#127793;</p>
+          <p class="font-display font-semibold text-moss text-lg">Pattern received.</p>
+          <p class="text-bark/50 text-sm mt-2">Thank you. The system grows with every observation.</p>
+          <button onclick="resetForm()" class="mt-4 text-sm text-moss underline underline-offset-4 hover:text-moss/70">Submit another</button>
         </div>
-        <div>
-          <p class="font-display font-bold text-4xl sm:text-5xl text-cyan stat-glow">9</p>
-          <p class="text-muted text-sm mt-2">AI systems<br>tested against</p>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-bark/40 text-sm mb-3">Other ways to contribute:</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="https://github.com/Sternmannli/kalam-framework/issues/new?title=%5BPattern%5D+Brief+description&labels=pattern"
+             target="_blank" rel="noopener"
+             class="text-sm text-moss border border-moss/20 rounded-full px-5 py-2 hover:border-moss/40 transition-colors inline-flex items-center gap-2">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 016.02 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.42.36.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12.01 12.01 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            Open GitHub Issue
+          </a>
+          <a href="https://github.com/Sternmannli/kalam-framework/blob/main/experiments/EXP-001-PROTOCOL.md"
+             target="_blank" rel="noopener"
+             class="text-sm text-amber border border-amber/20 rounded-full px-5 py-2 hover:border-amber/40 transition-colors inline-flex items-center gap-2">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Run Experiment EXP-001
+          </a>
         </div>
-        <div>
-          <p class="font-display font-bold text-4xl sm:text-5xl text-cyan stat-glow">3.6k</p>
-          <p class="text-muted text-sm mt-2">lines of<br>Python</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LIVE PULSE ============ -->
+  <section id="pulse" class="py-24 sm:py-32 px-6">
+    <div class="max-w-5xl mx-auto text-center">
+      <p class="font-mono text-xs text-amber tracking-widest uppercase mb-4">Live Pulse</p>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-4">
+        The system grows with you.
+      </h2>
+      <p class="text-bark/50 text-sm mb-2">
+        These numbers update automatically as the framework evolves.
+      </p>
+      <div class="flex items-center justify-center gap-2 mb-12">
+        <span class="w-2 h-2 rounded-full bg-moss pulse-dot"></span>
+        <span id="pulse-health" class="font-mono text-xs text-moss uppercase tracking-wide">loading...</span>
+        <span class="text-bark/20 mx-2">&middot;</span>
+        <span id="pulse-time" class="font-mono text-xs text-bark/40">&mdash;</span>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        <div class="organic-card p-6">
+          <p id="stat-patterns" class="font-display font-bold text-4xl sm:text-5xl text-moss stat-warm">&mdash;</p>
+          <p class="text-bark/50 text-sm mt-2">patterns<br>collected</p>
         </div>
-        <div>
-          <p class="font-display font-bold text-4xl sm:text-5xl text-cyan stat-glow">0</p>
-          <p class="text-muted text-sm mt-2">dependencies<br>beyond stdlib</p>
+        <div class="organic-card p-6">
+          <p id="stat-tools" class="font-display font-bold text-4xl sm:text-5xl text-amber stat-warm">&mdash;</p>
+          <p class="text-bark/50 text-sm mt-2">tools<br>published</p>
         </div>
+        <div class="organic-card p-6">
+          <p id="stat-detectors" class="font-display font-bold text-4xl sm:text-5xl text-moss stat-warm">&mdash;</p>
+          <p class="text-bark/50 text-sm mt-2">detectors<br>active</p>
+        </div>
+        <div class="organic-card p-6">
+          <p id="stat-experiments" class="font-display font-bold text-4xl sm:text-5xl text-amber stat-warm">&mdash;</p>
+          <p class="text-bark/50 text-sm mt-2">experiments<br>running</p>
+        </div>
+      </div>
+
+      <div class="organic-card p-8 max-w-md mx-auto glow-amber">
+        <p class="font-mono text-xs text-bark/40 uppercase tracking-wide mb-3">Core measurement</p>
+        <p class="font-display text-3xl font-bold gradient-earth mb-2">D = A &times; L &times; M</p>
+        <div class="flex justify-center gap-6 text-sm text-bark/50">
+          <span>Agency</span>
+          <span>Legibility</span>
+          <span>Moral Standing</span>
+        </div>
+        <p class="text-xs text-bark/30 mt-3">Non-compensatory. Any zero collapses the score.</p>
       </div>
     </div>
   </section>
@@ -304,23 +485,23 @@
   <!-- ============ GET STARTED ============ -->
   <section id="start" class="py-24 sm:py-32 px-6">
     <div class="max-w-3xl mx-auto text-center">
-      <p class="font-mono text-xs text-violet tracking-widest uppercase mb-4">Get Started</p>
+      <p class="font-mono text-xs text-moss tracking-widest uppercase mb-4">Get Started</p>
       <h2 class="font-display font-bold text-3xl sm:text-4xl leading-tight mb-8">
         Clone. Run. Measure.
       </h2>
-      <div class="code-block p-6 text-left mb-8">
-        <p class="font-mono text-xs text-muted mb-3"># Clone the framework</p>
-        <p class="font-mono text-sm text-cyan mb-4">git clone https://github.com/Sternmannli/kalam-framework.git</p>
-        <p class="font-mono text-xs text-muted mb-3"># Enter and explore</p>
-        <p class="font-mono text-sm text-cyan mb-4">cd kalam-framework</p>
-        <p class="font-mono text-xs text-muted mb-3"># Run the dignity gate on a sample interaction</p>
-        <p class="font-mono text-sm text-cyan">python -m kalam.gate --input sample.json</p>
+      <div class="organic-card p-6 text-left mb-8 font-mono text-sm overflow-x-auto">
+        <p class="text-bark/40 text-xs mb-3"># Clone the framework</p>
+        <p class="text-moss mb-4">git clone https://github.com/Sternmannli/kalam-framework.git</p>
+        <p class="text-bark/40 text-xs mb-3"># Enter and explore</p>
+        <p class="text-moss mb-4">cd kalam-framework</p>
+        <p class="text-bark/40 text-xs mb-3"># Run the gate function on a sample interaction</p>
+        <p class="text-moss">python -m kalam.gate --input sample.json</p>
       </div>
-      <p class="text-muted text-sm mb-8">
+      <p class="text-bark/50 text-sm mb-8">
         Python 3.10+. No external dependencies. Works offline.
       </p>
       <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 bg-violet hover:bg-violet/90 text-white font-display font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
+         class="inline-flex items-center gap-2 bg-moss hover:bg-moss/90 text-cream font-display font-semibold px-8 py-3.5 rounded-full transition-colors text-sm">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 016.02 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.42.36.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12.01 12.01 0 0024 12c0-6.63-5.37-12-12-12z"/>
         </svg>
@@ -330,18 +511,22 @@
   </section>
 
   <!-- ============ FOOTER ============ -->
-  <footer class="border-t border-glass-border py-12 px-6">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-muted">
-      <div class="flex items-center gap-2">
-        <span class="font-display font-bold"><span class="gradient-text">kalam</span>-framework</span>
-        <span class="text-glass-border">·</span>
-        <span>MIT License</span>
+  <footer class="border-t border-moss/10 py-12 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-bark/40">
+        <div class="flex items-center gap-2">
+          <span class="font-display font-bold"><span class="gradient-earth">kalam</span>-framework</span>
+          <span class="text-bark/10">&middot;</span>
+          <span>MIT License</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener" class="hover:text-bark transition-colors">GitHub</a>
+          <a href="https://github.com/Sternmannli/kalam-framework/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener" class="hover:text-bark transition-colors">Contributing</a>
+        </div>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="https://kalam.ch" target="_blank" rel="noopener" class="hover:text-snow transition-colors">kalam.ch</a>
-        <a href="https://github.com/Sternmannli/kalam-framework" target="_blank" rel="noopener" class="hover:text-snow transition-colors">GitHub</a>
-        <a href="mailto:contact@kalam.ch" class="hover:text-snow transition-colors">Contact</a>
-      </div>
+      <p class="text-center text-bark/20 text-xs mt-8">
+        Built with care. No personal data collected. Privacy by design, not by policy.
+      </p>
     </div>
   </footer>
 
@@ -351,11 +536,69 @@
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-
-    // Close mobile menu on link click
     menu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => menu.classList.add('hidden'));
     });
+
+    // Load pulse data
+    async function loadPulse() {
+      try {
+        const res = await fetch('pulse.json');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        document.getElementById('stat-patterns').textContent = data.metrics.patterns_collected || 0;
+        document.getElementById('stat-tools').textContent = data.metrics.tools_published || 0;
+        document.getElementById('stat-detectors').textContent = data.metrics.detectors_active || 0;
+        document.getElementById('stat-experiments').textContent = data.metrics.experiments_active || 0;
+        document.getElementById('pulse-health').textContent = data.health || 'active';
+
+        if (data.generated_at) {
+          const d = new Date(data.generated_at);
+          document.getElementById('pulse-time').textContent = 'updated ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+      } catch (e) {
+        document.getElementById('pulse-health').textContent = 'active';
+      }
+    }
+    loadPulse();
+
+    // Pattern form submission via GitHub Issue
+    const form = document.getElementById('pattern-form');
+    const successMsg = document.getElementById('success-msg');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const desc = document.getElementById('pattern-desc').value.trim();
+      const system = document.getElementById('pattern-system').value;
+      const category = document.querySelector('input[name="category"]:checked')?.value || 'other';
+      const confidence = document.querySelector('input[name="confidence"]:checked')?.value || 'C2';
+
+      if (!desc) return;
+
+      const title = encodeURIComponent('[Pattern] ' + desc.substring(0, 60) + (desc.length > 60 ? '...' : ''));
+      const body = encodeURIComponent(
+        '## Pattern Observation\n\n' +
+        desc + '\n\n' +
+        '**AI System:** ' + (system || 'Not specified') + '\n' +
+        '**Category:** ' + category + '\n' +
+        '**Confidence:** ' + confidence + '\n\n' +
+        '---\n' +
+        '_Submitted via kalam-framework pattern form. No personal data collected._'
+      );
+
+      window.open('https://github.com/Sternmannli/kalam-framework/issues/new?title=' + title + '&body=' + body + '&labels=pattern', '_blank');
+
+      form.classList.add('hidden');
+      successMsg.classList.remove('hidden');
+    });
+
+    function resetForm() {
+      form.reset();
+      form.classList.remove('hidden');
+      successMsg.classList.add('hidden');
+    }
   </script>
 
 </body>
