@@ -34,6 +34,9 @@ kalam-framework/
 │   ├── drift_detector.py    # Early warning for metric decline
 │   ├── pacing.py            # Module synchronization and stress management
 │   ├── signing.py           # Ed25519 multi-signature for JSON manifests
+│   ├── crypto_erasure.py    # AES-256-GCM cryptographic erasure (GDPR)
+│   ├── privacy_budget.py    # Differential privacy budget accounting
+│   ├── early_warning.py     # EWMA/CUSUM change-point detection pipeline
 │   ├── confidence.py        # Confidence scoring from frequency/diversity
 │   ├── temporal_index.py    # Dual-track temporal reasoning
 │   ├── similarity.py        # Structural similarity measurement
@@ -81,6 +84,9 @@ print(amp.report())
 - `tools/agency_score.py`
 - `tools/drift_detector.py`
 - `tools/pacing.py`
+- `tools/crypto_erasure.py`
+- `tools/privacy_budget.py`
+- `tools/early_warning.py`
 - `tools/confidence.py`
 - `experiments/schema.py`
 
