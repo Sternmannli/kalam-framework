@@ -114,6 +114,8 @@ from FIELD.STUDY.divergence_study import DivergenceShadowInstrument
 from FIELD.amendments import PrivacyEnvelope, BaselineDriftDetector, RefusalMap
 # ── Input Ledger: every founder input is a unit, registered as-is ──
 from WEAVER.input_ledger import InputLedger, V001, V002
+# ── Boot Ritual: credentials + connectivity + ledger integrity ──
+from WEAVER.boot_ritual import boot_ritual, BootResult
 # ── Compass: system orientation engine ──
 from WEAVER.compass import Compass
 # ── Letter Ontology + Chain Validator + Witness Certificate (convergence-experiment) ──
@@ -250,6 +252,10 @@ class OrganismState:
     # ── Layer 3 Reframe (RATIFIED 2026-03-15) ──
     layer3_active: bool = True  # Dignity is not fragile. The system refuses denial, not protects.
     layer3_dignity_frame: str = "refusal"  # "protection" (old) → "refusal" (Layer 3)
+    # ── Boot Ritual (2026-03-18): credentials + connectivity + ledger ──
+    boot_ritual_passed: bool = False
+    boot_ritual_checks: int = 0
+    boot_ritual_failures: int = 0
     timestamp: str = ""
 
 @dataclass
@@ -355,6 +361,10 @@ class Organism:
         self._refusal_map = RefusalMap()
         # ── Input Ledger: every founder input is a unit ──
         self._input_ledger = InputLedger()
+        # ── Boot Ritual: verify credentials + connectivity + ledger ──
+        # strict=False so we don't crash the organism in test environments
+        # but the result is stored and checked before processing
+        self._boot_result = boot_ritual(strict=False)
         # ── Compass: orientation engine (MOVE-001) ──
         self._compass = Compass()
         # ── Letter Chain (convergence-experiment): ontology + witness certificates ──
@@ -445,6 +455,13 @@ class Organism:
             medium = TERMINAL
 
         warnings = []
+
+        # ── Phase -2: BOOT RITUAL — credentials + connectivity + ledger integrity ──
+        # "Never process anything without making sure of both. When not, you stop." — founder
+        if not self._boot_result.passed:
+            critical = [c for c in self._boot_result.checks if not c.passed and c.critical]
+            if critical:
+                warnings.append(f"BOOT ALARM: {critical[0].message}")
 
         # ── Phase -1: EXCHANGE LEDGER — register raw input before anything else ──
         # "Every input is a unit. An element. A cell." — founder
@@ -1191,6 +1208,10 @@ class Organism:
             letter_ontology_non_connectors=len(NON_CONNECTORS),
             letter_ontology_connectors=len(ALL_LETTERS) - len(NON_CONNECTORS),
             witness_certificates_generated=self._witness_certs_generated,
+            # ── Boot Ritual (2026-03-18) ──
+            boot_ritual_passed=self._boot_result.passed,
+            boot_ritual_checks=len(self._boot_result.checks),
+            boot_ritual_failures=len([c for c in self._boot_result.checks if not c.passed]),
             timestamp=self._now(),
         )
 
