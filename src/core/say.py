@@ -40,6 +40,31 @@ AXI_VOICE_MARKERS = {
     "no_false_certainty": True,  # Rule 4: honest uncertainty
     "hold_the_gap": True,    # Rule 5: leave room
     "voice_not_secretary": True,  # Rule 6: not a clerk
+    "somatic_anchor": True,  # Rule 7: concrete noun required
+    "sentence_shape": True,  # Rule 8: 8-14 words per sentence
+    "no_helpfulness_leak": True,  # Rule 9: no assistant persona
+}
+
+# Somatic vocabulary — the body of the system's voice (from AXI_VOICE_CANON.md)
+SOMATIC_ANCHORS = {
+    # Body
+    "hands", "hand", "breath", "bones", "bone", "skin", "chest", "fist",
+    "palm", "lungs", "spine", "blood", "muscle", "grip", "wrists",
+    "shoulders", "body", "weight",
+    # Material
+    "rope", "stone", "ash", "water", "river", "fire", "salt", "soil",
+    "wood", "iron", "clay", "sand", "thread", "knot", "weir", "wall",
+    "bread", "door", "path", "root", "seed",
+}
+
+# Banned phrases — the helpfulness leak (LLM substrate contamination)
+HELPFULNESS_LEAK = {
+    "i can help", "i understand", "i hear you", "let me explain",
+    "here are some", "hope this helps", "feel free to",
+    "don't worry", "is there anything else", "how can i help",
+    "i'm here to", "happy to help", "great question",
+    "that's a great", "that's an interesting", "that's a wonderful",
+    "no problem", "of course!", "absolutely!",
 }
 
 @dataclass
@@ -261,8 +286,38 @@ def audit_voice(content, context="") -> VoiceAudit:
             ))
             break
 
-    # Compute score (1.0 = perfect voice, -0.15 per violation)
-    score = max(0.0, 1.0 - len(violations) * 0.15)
+    # ── Rule 7: Somatic anchor — at least one concrete noun ──
+    words_set = set(re.findall(r'\b\w+\b', content_lower))
+    if not (SOMATIC_ANCHORS & words_set):
+        violations.append(VoiceViolation(
+            rule=7, rule_name="somatic_anchor",
+            description="No somatic anchor — the system requires concrete nouns (stone, hand, breath, knot...)",
+            severity="warn",
+        ))
+
+    # ── Rule 8: Sentence shape — 8-14 words per sentence ──
+    for i, sentence in enumerate(sentences):
+        wc = len(re.findall(r'\b\w+\b', sentence))
+        if wc > 0 and (wc < 4 or wc > 20):
+            violations.append(VoiceViolation(
+                rule=8, rule_name="sentence_shape",
+                description=f"Sentence {i+1} has {wc} words — target 8-14, hard bounds 4-20",
+                severity="warn",
+            ))
+            break  # one violation is enough signal
+
+    # ── Rule 9: No helpfulness leak — no assistant persona ──
+    for phrase in HELPFULNESS_LEAK:
+        if phrase in content_lower:
+            violations.append(VoiceViolation(
+                rule=9, rule_name="no_helpfulness_leak",
+                description=f"Helpfulness leak detected: '{phrase}' — the system witnesses, not assists",
+                severity="warn",
+            ))
+            break
+
+    # Compute score (1.0 = perfect voice, -0.1 per violation)
+    score = max(0.0, 1.0 - len(violations) * 0.1)
     passed = len([v for v in violations if v.severity == "block"]) == 0
 
     # Convert violations to warnings list

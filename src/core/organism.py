@@ -640,7 +640,15 @@ class Organism:
             warnings.append(f"Agency collapsed: weakest dimension is {agency_score.weakest}")
 
         # 2d-v. GAP#004 — conflict detection (individual vs collective)
-        conflict_ticket = self._conflict_engine.process(donor_input)
+        # Fix 4: Pass individual dignity scores into the conflict engine so
+        # collective measurement can compute D_collective = mean(D_i) × (1 - variance_penalty)
+        individual_scores = [c.score for c in dignity.components] if dignity.components else None
+        failed_components = [[c.name for c in dignity.components if not c.passed]] if dignity.components else None
+        conflict_ticket = self._conflict_engine.process(
+            donor_input,
+            individual_scores=individual_scores,
+            failed_components=failed_components,
+        )
         if conflict_ticket:
             self._wire.broadcast(
                 f"GAP#004 conflict: {conflict_ticket.severity} — {conflict_ticket.input_summary}",
@@ -648,6 +656,45 @@ class Organism:
                 source="mediator",
             )
             warnings.append(f"GAP#004 {conflict_ticket.severity}: {conflict_ticket.resolution_mode}")
+
+            # Fix 2: Wire collective remedies to shelter path (COV#008 for groups)
+            if conflict_ticket.collective_remedies:
+                cohort_shelter_needed = any(
+                    r.remedy_type in ("sealed_gate", "policy_review")
+                    for r in conflict_ticket.collective_remedies
+                )
+                remedy_descriptions = [r.description for r in conflict_ticket.collective_remedies]
+                self._wire.broadcast(
+                    f"Collective remedies ({len(remedy_descriptions)}): "
+                    + "; ".join(r.remedy_type for r in conflict_ticket.collective_remedies),
+                    "gap004-collective-remedy",
+                    source="mediator",
+                )
+                if cohort_shelter_needed:
+                    # COV#008 applies to groups — trigger shelter for the cohort
+                    shelter_record = self._shelter.receive(
+                        ex_id, donor_input,
+                        failed_components=["collective_D"],
+                    )
+                    warnings.append(
+                        f"COV#008 collective shelter: {shelter_record.donor_message}"
+                    )
+
+            # Fix 3: W-Scale checkpoint — escalate unwitnessed collective sealed gate
+            if (conflict_ticket.collective_measurement
+                    and conflict_ticket.collective_measurement.sealed_gate
+                    and conflict_ticket.witness_level < 3):
+                conflict_ticket = self._conflict_engine.steward_sees(conflict_ticket)
+                self._wire.broadcast(
+                    f"W-Scale escalation: collective D="
+                    f"{conflict_ticket.collective_measurement.D_collective:.3f} "
+                    f"< 0.5 — auto-escalated to W-3 (SEEN)",
+                    "w-scale-checkpoint",
+                    source="organism",
+                )
+                warnings.append(
+                    f"W-Scale: sealed gate conflict escalated to W-3 (SEEN)"
+                )
 
         # 2e. PILLARS — unified pillar detection (humour/absurdity/obsession/love/proverb)
         pillar_profile = None
