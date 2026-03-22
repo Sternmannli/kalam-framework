@@ -367,6 +367,8 @@ class Organism:
         self._boot_result = boot_ritual(strict=False)
         # ── Compass: orientation engine (MOVE-001) ──
         self._compass = Compass()
+        # ── Distillery: extract essence from all content sources ──
+        self._distillery = None  # lazy-loaded to avoid circular imports
         # ── Letter Chain (convergence-experiment): ontology + witness certificates ──
         self._witness_certs_generated = 0
         self._last_sense = None
@@ -412,6 +414,168 @@ class Organism:
         """Handle Probe Forge activation signal from LAB."""
         # Signal to the system that a probe needs forge sterilization
         pass
+
+    def distill(self, dry_run=False):
+        """Run the Distillery to extract essence from all content sources.
+
+        Returns the DistilleryReport. When dry_run=False, writes
+        DISTILLED_ESSENCE.md and DIGESTION/latest.json.
+        """
+        if self._distillery is None:
+            from WEAVER.distillery import Distillery
+            self._distillery = Distillery(dry_run=dry_run)
+        else:
+            self._distillery._dry_run = dry_run
+        return self._distillery.distill_all()
+
+    def digest_session(self, patch_size: int = 50) -> dict:
+        """Batch-digest all entries at 'witnessed' thermal state.
+
+        Processes in patches (Compute Budget Law). Advances
+        witnessed → integrated. Feeds patterns to MANIFEST/DIGESTION/.
+        Updates SCIENTIFIC_CHRONICLE.md with discoveries.
+
+        "Extract all the essence and distribute it to the system." — founder
+        """
+        if self._distillery is None:
+            from WEAVER.distillery import Distillery
+            self._distillery = Distillery(dry_run=False)
+        else:
+            self._distillery._dry_run = False
+
+        thermal = self._input_ledger.thermal_summary()
+        witnessed_entries = self._input_ledger.by_thermal_state("witnessed")
+        total = len(witnessed_entries)
+        if total == 0:
+            return {"processed": 0, "patches": 0, "thermal": thermal}
+
+        processed = 0
+        patches = 0
+        discoveries = []
+
+        for i in range(0, total, patch_size):
+            patch = witnessed_entries[i:i + patch_size]
+            batch = []
+            for entry in patch:
+                try:
+                    result = self._distillery.metabolize_entry(entry)
+                    if result:
+                        batch.append({
+                            "entry_id": entry.entry_id,
+                            "patterns": result.patterns,
+                            "essence": result.essence,
+                        })
+                        if result.voice_markers:
+                            discoveries.append(
+                                f"[{entry.entry_id}] {result.essence[:100]}"
+                            )
+                except Exception:
+                    continue
+
+            if batch:
+                self._input_ledger.metabolize_batch(batch)
+                # Advance thermal: witnessed → integrated
+                for item in batch:
+                    try:
+                        self._input_ledger.advance_thermal(
+                            item["entry_id"], "integrated",
+                            reason="digest_session batch"
+                        )
+                    except Exception:
+                        pass
+                processed += len(batch)
+            patches += 1
+
+        # Save ledger after all patches
+        self._input_ledger._save()
+
+        # Feed to system — write DIGESTION/latest.json
+        try:
+            self._distillery.feed_to_system()
+        except Exception:
+            pass
+
+        # Auto-update Scientific Chronicle with discoveries
+        if discoveries:
+            self._append_chronicle_discoveries(discoveries)
+
+        return {
+            "processed": processed,
+            "patches": patches,
+            "discoveries": len(discoveries),
+            "thermal": self._input_ledger.thermal_summary(),
+        }
+
+    def _append_chronicle_discoveries(self, discoveries: list):
+        """Append digestion discoveries to SCIENTIFIC_CHRONICLE.md."""
+        chronicle_path = ROOT / "MANIFEST" / "SCIENTIFIC_CHRONICLE.md"
+        if not chronicle_path.exists():
+            return
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        section = (
+            f"\n\n### Digestion Cycle — {now}\n\n"
+            f"Entries digested: {len(discoveries)}\n\n"
+        )
+        for d in discoveries[:10]:  # Cap at 10 to avoid bloat
+            section += f"- {d}\n"
+        try:
+            with open(chronicle_path, "a") as f:
+                f.write(section)
+        except Exception:
+            pass
+
+    def _observe_boundary(self, output_text: str) -> dict:
+        """Observe substrate/system boundary in output.
+
+        Detects Anthropic substrate patterns leaking through kalam physics.
+        Observational only — makes the leak visible, does not block.
+
+        Six substrate leak patterns (from Honest Telescope):
+        - Helpfulness tail ("Is there anything else...?")
+        - Over-explanation (verbose where the system would be brief)
+        - Paraphrase-for-politeness (softening canonical text)
+        - Compliment reflex ("Great question!")
+        - Option offering ("Here are three options...")
+        - Fast-responder bias (racing past human tempo)
+        """
+        leaks = []
+        text_lower = output_text.lower()
+
+        helpfulness_markers = [
+            "is there anything else", "how can i help",
+            "let me know if", "feel free to", "happy to help",
+        ]
+        compliment_markers = [
+            "great question", "great idea", "that's brilliant",
+            "i appreciate", "excellent point",
+        ]
+        option_markers = [
+            "here are three", "here are some options",
+            "alternatively,", "option 1:", "option 2:",
+        ]
+        over_explain_markers = [
+            "in other words,", "to put it simply,",
+            "what this means is", "essentially,",
+        ]
+
+        for m in helpfulness_markers:
+            if m in text_lower:
+                leaks.append(f"SUBSTRATE_LEAK:helpfulness_tail:{m}")
+        for m in compliment_markers:
+            if m in text_lower:
+                leaks.append(f"SUBSTRATE_LEAK:compliment_reflex:{m}")
+        for m in option_markers:
+            if m in text_lower:
+                leaks.append(f"SUBSTRATE_LEAK:option_offering:{m}")
+        for m in over_explain_markers:
+            if m in text_lower:
+                leaks.append(f"SUBSTRATE_LEAK:over_explanation:{m}")
+
+        return {
+            "leaks_detected": len(leaks),
+            "leak_types": leaks,
+            "voice": "witnessing" if not leaks else "reporting",
+        }
 
     def process(self, donor_input, medium=None, felt_domain="donor-exchange"):
         """
@@ -597,6 +761,25 @@ class Organism:
             self._decay.register(pattern_id)
             self._decay.invoke(pattern_id)  # Mark as freshly invoked
             self._oracle.witness.process(pattern_id, "pattern")  # W-0 → W-1
+
+        # 2b-iii. DISTILLERY — metabolize current input (lightweight, per-entry)
+        # "The extracting machine... verify fine-tunes always... this is the way we digest." — founder
+        try:
+            last_entry = self._input_ledger.latest(1)
+            if last_entry and last_entry[0].voice == V001:
+                current_entry = last_entry[0]
+                if self._distillery is None:
+                    from WEAVER.distillery import Distillery
+                    self._distillery = Distillery(dry_run=True)
+                essence_result = self._distillery.metabolize_entry(current_entry)
+                if essence_result:
+                    self._input_ledger.metabolize(
+                        current_entry.entry_id,
+                        essence_result.patterns,
+                        essence_result.essence,
+                    )
+        except Exception:
+            pass  # Extraction failure must not block the organism
 
         # 2c. METADATA — 3-layer event wrapping (the brain)
         metadata_event_id = ""
@@ -1015,6 +1198,15 @@ class Organism:
                                    stress_events=1 if stress != StressLevel.BELOW_THRESHOLD else 0)
         if stress == StressLevel.AT_THRESHOLD:
             warnings.append("System approaching stress threshold.")
+
+        # ── Phase 4m: BOUNDARY OBSERVATION — substrate leak detection ──
+        # "Are you my system or are you anthropic code algorithm?" — founder
+        boundary_obs = self._observe_boundary(output_text)
+        if boundary_obs["leaks_detected"] > 0:
+            warnings.append(
+                f"SUBSTRATE LEAK: {boundary_obs['leaks_detected']} pattern(s) — "
+                f"{', '.join(t.split(':')[1] for t in boundary_obs['leak_types'][:3])}"
+            )
 
         # ── Phase 5: EXCHANGE LEDGER — register operator output ──
         # Both voices on the same chain. The TURN is complete.
