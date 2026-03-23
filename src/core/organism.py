@@ -125,6 +125,8 @@ from WEAVER.witness_certificate import (
     DignitySnapshot, Subject, InstitutionalContext, CoordinatesOfFailure,
     generate_certificate, save_certificate,
 )
+# ── Voice Engine: canon-grounded response generation ──
+from WEAVER.voice_engine import VoiceEngine, detect_register
 
 @dataclass
 class OrganismState:
@@ -369,6 +371,8 @@ class Organism:
         self._compass = Compass()
         # ── Distillery: extract essence from all content sources ──
         self._distillery = None  # lazy-loaded to avoid circular imports
+        # ── Voice Engine: canon-grounded response generation ──
+        self._voice_engine = VoiceEngine()
         # ── Letter Chain (convergence-experiment): ontology + witness certificates ──
         self._witness_certs_generated = 0
         self._last_sense = None
@@ -838,6 +842,49 @@ class Organism:
         self._last_agency = agency_score
         if agency_score.is_collapsed:
             warnings.append(f"Agency collapsed: weakest dimension is {agency_score.weakest}")
+            # ENFORCEMENT: collapsed agency = deferred exchange with shelter
+            # "If any sub-dimension is 0, agency collapses" — Seed #12
+            self._wire.broadcast(
+                f"Agency enforcement: A=0 due to {agency_score.weakest}=0 on {ex_id}",
+                "agency-enforcement",
+                source="agency_amplifier",
+            )
+            shelter_record = self._shelter.receive(
+                ex_id, donor_input,
+                failed_components=[f"agency:{agency_score.weakest}"],
+            )
+            self._turn.defer(ex_id, f"Agency collapsed: {agency_score.weakest} = 0")
+            return ProcessResult(
+                exchange_id=ex_id,
+                input_text=donor_input[:100],
+                dignity_passed=False,
+                patterns_found=len(candidates),
+                drops_produced=len(drops),
+                output_text="",
+                output_blocked=True,
+                block_reason=f"Agency collapsed: {agency_score.weakest} = 0. The donor cannot {agency_score.weakest.lower()} the outcome.",
+                stored=False,
+                artifact_id="",
+                exchange_state="deferred",
+                breath_cycle=self._breath.cycle,
+                drift_level=drift_alert.level.value,
+                drift_rate=drift_alert.dD_dt,
+                shelter_message=shelter_record.donor_message,
+                shelter_remedies=[r.component for r in shelter_record.remedies],
+                complexity=complexity.value,
+                recommended_td=recommended_td,
+                agency_A=agency_score.A,
+                agency_weakest=agency_score.weakest,
+                sense_mode=sense_reading.mode.value,
+                sense_competence=sense_reading.competence.value,
+                sense_need_gap=sense_reading.need_gap.value,
+                sense_ask_recommended=sense_reading.ask_recommended,
+                sense_ask_question=sense_reading.ask_question,
+                lab_active=lab_reading.active if lab_reading else False,
+                pillar_profile=pillar_profile or {},
+                metadata_event_id=metadata_event_id,
+                warnings=warnings,
+            )
 
         # 2d-v. GAP#004 — conflict detection (individual vs collective)
         # Fix 4: Pass individual dignity scores into the conflict engine so
@@ -1002,9 +1049,9 @@ class Organism:
             # WITNESS CERTIFICATE — the halt is the product
             try:
                 d_snap = DignitySnapshot(
-                    A=self._last_measurement.A if self._last_measurement else 0.0,
-                    L=self._last_measurement.L if self._last_measurement else 0.0,
-                    M=self._last_measurement.M if self._last_measurement else 0.0,
+                    A=self._last_measurement.A.final_score if self._last_measurement else 0.0,
+                    L=self._last_measurement.L.final_score if self._last_measurement else 0.0,
+                    M=self._last_measurement.M.final_score if self._last_measurement else 0.0,
                 )
                 cert = generate_certificate(
                     dignity=d_snap,
@@ -1028,6 +1075,13 @@ class Organism:
                 save_certificate(cert)
                 self._witness_certs_generated += 1
                 warnings.append(f"WITNESS CERTIFICATE: {cert.certificate_id} (Ta_mufrad)")
+                # W-Scale advancement: certificate generation = W-3 (SEEN)
+                # "Did the steward see this? Did they hold it?" — Oracle
+                self._oracle.witness.process(cert.certificate_id, "certificate")
+                try:
+                    self._oracle.witness.steward_sees(cert.certificate_id, ex_id)
+                except Exception:
+                    pass  # W-Scale advancement is observational, never blocks
             except Exception as e:
                 warnings.append(f"Witness certificate generation failed: {e}")
 
@@ -1064,21 +1118,20 @@ class Organism:
                 warnings=self._last_dignity.get("warnings", []) + warnings,
             )
 
-        # 3b. SAY — render output
-        # For now, the output is an acknowledgment. In a full system,
-        # SENSE-aware response: if SENSE recommends asking, prepend the question
+        # 3b. SAY — render output through Voice Engine (canon-grounded)
+        # SENSE-aware: if SENSE recommends asking, the question takes priority
+        # Otherwise: Voice Engine speaks from canon (proverbs, narratives, golden utterances)
         if sense_reading.ask_recommended and sense_reading.ask_question:
             response_text = sense_reading.ask_question
-        elif drops:
-            best_drop = max(drops, key=lambda d: d.confidence)
-            response_text = (
-                f"Your offering has been received. "
-                f"{len(drops)} pattern{'s' if len(drops) > 1 else ''} detected "
-                f"({best_drop.drop_type}, confidence {best_drop.confidence:.1%}). "
-                f"It rests in the threshold."
-            )
         else:
-            response_text = "Your offering has been received. The mycelium listens."
+            # Voice Engine: respond from canon, register-matched
+            input_register = detect_register(donor_input)
+            voice_response = self._voice_engine.respond(
+                donor_input,
+                dignity=dignity.D,
+                register=input_register,
+            )
+            response_text = voice_response.text
 
         # LAB-aware: append rigor warnings if science detected
         if lab_reading and lab_reading.active and lab_reading.rigor_warnings:
@@ -1207,6 +1260,15 @@ class Organism:
                 f"SUBSTRATE LEAK: {boundary_obs['leaks_detected']} pattern(s) — "
                 f"{', '.join(t.split(':')[1] for t in boundary_obs['leak_types'][:3])}"
             )
+
+        # 4n. FIELD AUTO-AUDIT — check if audit is due (every N exchanges)
+        if self._field_audit_scheduler.should_audit():
+            try:
+                audit = self._field_audit_scheduler.schedule_audit()
+                if audit:
+                    warnings.append(f"FIELD audit scheduled: {audit.audit_id if hasattr(audit, 'audit_id') else 'triggered'}")
+            except Exception:
+                pass  # Audit scheduling is observational, never blocks
 
         # ── Phase 5: EXCHANGE LEDGER — register operator output ──
         # Both voices on the same chain. The TURN is complete.
