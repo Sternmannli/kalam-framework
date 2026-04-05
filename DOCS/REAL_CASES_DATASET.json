@@ -5,7 +5,7 @@
     "created": "2026-04-05",
     "purpose": "Real-world court-verified cases of institutional blindness for testing and training the kalam-core gap detector (SP-007)",
     "note": "Every case is from a published court decision or official human rights body ruling. All sources are public and verifiable.",
-    "case_count": 15
+    "case_count": 21
   },
   "cases": [
     {
@@ -247,6 +247,102 @@
       "gap_type": "missing_category",
       "axis": "A",
       "gap_description": "The institution's procedure had no step for 'hear the child.' The child was a subject OF the proceedings but not a participant IN the proceedings. The system had categories for 'mother's position,' 'father's position,' 'expert opinion' — but no category for 'child's voice.'"
+    },
+    {
+      "case_id": "IACHR-001",
+      "name": "Atala Riffo and Daughters v. Chile",
+      "court": "Inter-American Court of Human Rights",
+      "application_no": "Series C No. 239",
+      "year": 2012,
+      "country": "Chile",
+      "source_url": "https://iachr.lls.edu/cases/atala-riffo-and-daughters-v-chile",
+      "domain": "custody",
+      "institutional_text": "The Chilean Supreme Court awarded custody of three daughters to the father, concluding that the mother's same-sex relationship posed 'potential confusion over sexual roles' and 'a risk to the integral development of the children.' The court used the mother's sexual orientation as the determining factor in the custody decision.",
+      "person_situation": "Karen Atala Riffo, a Chilean judge and mother of three daughters, came out as a lesbian in 2002 after separating from her husband. Her ex-husband sued for custody. Despite being the primary caregiver and a competent parent, the Supreme Court removed custody based on her sexual orientation, not her parenting.",
+      "court_finding": "The Inter-American Court found Chile violated the American Convention on Human Rights. The Chilean Supreme Court had acted discriminatorily by denying custody based on sexual orientation. Chile was ordered to pay $50,000 in damages. First LGBT rights case in the Inter-American system.",
+      "gap_type": "category_mismatch",
+      "axis": "L",
+      "gap_description": "The institution mapped 'sexual orientation' to 'parenting risk.' The mother's identity as a lesbian was treated as a parenting deficiency. The court could not see the parent — it only saw the sexual orientation. The actual parent-child relationship was invisible behind the identity category."
+    },
+    {
+      "case_id": "ZA-001",
+      "name": "S.E.T and Others v. Department of Justice (South Africa)",
+      "court": "Western Cape High Court",
+      "application_no": "A83/2024",
+      "year": 2025,
+      "country": "South Africa",
+      "source_url": "https://www.saflii.org/za/cases/ZAWCHC/2025/282.html",
+      "domain": "child_protection",
+      "institutional_text": "The Children's Court, Atlantis, issued an ex parte no-contact order barring all members of both the maternal and paternal family from contact with the children. The magistrate then placed the children in permanent foster care while an appeal was pending, violating the automatic suspension rule. The no-contact order relied on speculative assertions without individualized assessments of affected family members.",
+      "person_situation": "Parents (a British businesswoman and a South African professional) residing with their children in Qatar, maintaining property in Cape Town. The maternal aunt, a British citizen closely connected to the children, was also barred from contact. The entire extended family on both sides was cut off from the children based on unsubstantiated allegations.",
+      "court_finding": "The High Court set aside all orders. Found: no-contact order made without sufficient factual grounding, speculative assertions rather than evidence, no individualized assessments, fundamental failure of natural justice (parents' version never obtained), and the magistrate proceeded with permanent foster care while appeal was pending. Children returned to parents.",
+      "gap_type": "category_applied_incorrectly",
+      "axis": "L",
+      "gap_description": "The institution applied 'risk to children' as a blanket category to the entire extended family on both sides without individualized assessment. One allegation was mapped to every family member. The system could not distinguish between specific individuals — it saw 'family' as a monolithic risk rather than individual people with individual relationships to the children."
+    },
+    {
+      "case_id": "JP-001",
+      "name": "Japan Sole Custody System — Hague Convention Non-Compliance",
+      "court": "UN Human Rights Council / Multiple International Bodies",
+      "application_no": "Multiple complaints",
+      "year": 2019,
+      "country": "Japan",
+      "source_url": "https://en.wikipedia.org/wiki/International_child_abduction_in_Japan",
+      "domain": "custody",
+      "institutional_text": "Japanese family law required sole parental authority after divorce. No joint custody option existed. The family registry (Koseki) system allowed a child to be registered under only one parent's record. Courts routinely awarded custody to the parent who had physical possession of the child, creating an incentive for parental abduction. No enforcement mechanism existed for court-ordered visitation.",
+      "person_situation": "Left-behind parents (both Japanese and international) who lost all contact with their children after divorce. Many parents had their children taken by the other parent and could not get them back because the system awarded custody to whoever had possession. Visitation orders were unenforceable — compliance was voluntary.",
+      "court_finding": "Leaders from Germany, France, and Italy expressed concern in 2019. The UN Human Rights Council issued formal complaints that Japan's custody laws violated international norms. Japan reformed the law effective April 2026, allowing joint custody — acknowledging the system was structurally flawed.",
+      "gap_type": "missing_category",
+      "axis": "A",
+      "gap_description": "The institution had no category for 'joint parental authority.' The legal system could only process 'one parent has custody' — the concept of two parents sharing responsibility after divorce did not exist in the system's vocabulary. The left-behind parent became legally invisible."
+    },
+    {
+      "case_id": "CAN-002",
+      "name": "Pacheco Tineo Family v. Bolivia",
+      "court": "Inter-American Court of Human Rights",
+      "application_no": "Series C No. 272",
+      "year": 2013,
+      "country": "Bolivia",
+      "source_url": "https://www.corteidh.or.cr/docs/casos/articulos/seriec_272_ing.pdf",
+      "domain": "immigration",
+      "institutional_text": "Bolivian immigration authorities processed a Peruvian family's asylum claim using expedited procedures. The family, including children, was deported within days without adequate assessment of their protection needs. Standard immigration procedures were applied without consideration of the presence of children in the family unit.",
+      "person_situation": "The Pacheco Tineo family, including minor children, fled Peru and sought asylum in Bolivia. They were subjected to expedited deportation proceedings that did not account for the children's specific needs, the family's right to seek protection, or the principle of non-refoulement as applied to families with children.",
+      "court_finding": "The Inter-American Court found Bolivia violated the right to mental and moral integrity and was responsible for violations of the obligation to provide special protection to children. The expedited procedure failed to account for the family unit and children's specific vulnerabilities.",
+      "gap_type": "missing_category",
+      "axis": "L",
+      "gap_description": "The immigration system processed the family through standard adult deportation procedures. There was no category for 'family with children seeking asylum' that would trigger different procedures. The children were invisible to the immigration process — processed as appendages to adult cases rather than rights-holders requiring specific protections."
+    },
+    {
+      "case_id": "ZA-002",
+      "name": "South Africa Foster Care Crisis — Centre for Child Law Intervention",
+      "court": "North Gauteng High Court",
+      "application_no": "N/A",
+      "year": 2011,
+      "country": "South Africa",
+      "source_url": "https://www.centreforchildlaw.co.za/our-cases/",
+      "domain": "child_welfare_funding",
+      "institutional_text": "Over 110,000 foster care grants lapsed between April 2009 and March 2011 because the Department of Social Development could not process foster care order renewals in time. The system required periodic court review of every foster care placement, but the courts and social workers were overwhelmed. When orders lapsed, payments stopped — even though the children were still in foster care.",
+      "person_situation": "Over 110,000 children in foster care whose grants simply stopped because the bureaucratic system could not keep up with its own renewal requirements. The children were still with foster families, still needed support — but the system's own administrative backlog cut off their funding.",
+      "court_finding": "The High Court placed a moratorium on the lapsing of foster care orders and gave the Department until December 2014 to develop a comprehensive legal solution. The deadline was extended four times (to December 2022). The court recognized that the system's own administrative requirements were harming the children it was designed to protect.",
+      "gap_type": "category_applied_incorrectly",
+      "axis": "A",
+      "gap_description": "The institution applied 'order expired' as an automatic termination of support, without checking whether the underlying need still existed. The bureaucratic category (order validity) overrode the human reality (child still in care, still needs support). The system's own paperwork backlog became a weapon against the children it served."
+    },
+    {
+      "case_id": "IN-001",
+      "name": "India Supreme Court — Child Welfare Over Parental Rights",
+      "court": "Supreme Court of India",
+      "application_no": "2024/12847",
+      "year": 2025,
+      "country": "India",
+      "source_url": "https://api.sci.gov.in/supremecourt/2024/12847/12847_2024_17_1504_60158_Judgement_17-Mar-2025.pdf",
+      "domain": "custody",
+      "institutional_text": "A High Court ordered a 2.5-year-old girl to be 'restored' to her father and paternal grandparents, classifying the maternal aunt's custody as 'illegal.' The father had been arrested for the mother's alleged dowry death. The High Court applied the legal category of 'father's natural right to custody' without weighing the child's actual welfare or the circumstances of the mother's death.",
+      "person_situation": "A 2.5-year-old girl who had been living with her maternal aunt following her mother's death (father arrested for alleged dowry death). The child was settled, cared for, and safe. The High Court ordered her returned to the father based on his legal status as parent, not the child's actual wellbeing.",
+      "court_finding": "The Supreme Court rejected the High Court's decision. Emphasized that the child's welfare is the paramount consideration, not the parent's legal right. The category of 'natural guardian' does not automatically override the category of 'best interests of the child.'",
+      "gap_type": "category_mismatch",
+      "axis": "A",
+      "gap_description": "The High Court mapped 'biological father' to 'rightful custodian' automatically, without weighing the specific circumstances: the father was arrested for the mother's death. The legal category of 'natural guardian' was applied as an absolute right rather than a contextual assessment. The child's actual safety and attachment were invisible behind the legal status of paternity."
     }
   ]
 }
