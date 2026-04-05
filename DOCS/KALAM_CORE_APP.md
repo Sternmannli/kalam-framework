@@ -590,6 +590,7 @@ pnpm workspaces (Node.js 24, TypeScript 5.9)
 | OpenAPI spec | ✅ Live | 3 endpoints, full schemas |
 | Generated Zod schemas | ✅ Live | Auto-generated from OpenAPI spec |
 | All 15 Phase 1 spec test cases | ✅ Passing | Verified via API endpoint |
+| Regression test suite — Phase 1 + Phase 2 | ✅ Passing | 176 assertions; 3 Phase 2 anchors locked by finding not classification |
 
 ### What Is Missing
 
