@@ -693,7 +693,81 @@ Revenue model: voluntary sustenance. The system witnessed you; you may sustain i
 | `artifacts/kalam-core-site/src/pages/GapDetector.tsx` | Replit | Phase 2 page |
 | `lib/api-spec/openapi.yaml` | Replit | OpenAPI 3.1 spec |
 
+
 ---
 
-*Document version: April 2026. Last updated after Phase 2 (Gap Detector) deployment.*
+## 14. Regression Test Suite
+
+**Location:** `scripts/src/test-kalam.ts`
+**Run:** `pnpm test` (from workspace root) or `pnpm --filter @workspace/scripts run test`
+**Requires:** API server running on `localhost:8080`
+
+### Structure
+
+The suite has three sections, 176 assertions total:
+
+| Section | Cases | Approach |
+|---------|-------|----------|
+| Health check | 1 | Verifies API server is reachable |
+| Phase 1 — Dignity Filter | 15 | Deterministic rule-based cases — exact pass/fail, axis, D arithmetic |
+| Phase 2 — Gap Detector | 3 | Structural invariants + locked semantic anchors |
+
+### Phase 1 Test Design
+
+Each of the 15 deterministic cases asserts:
+
+1. **`passed`** — exact boolean match (the core behavioral test)
+2. **`method`** — must be `"rule-based"` (no LLM escalation for clear cases)
+3. **`flag`** — names the correct failing axis (via `result.flag`, which uses worst-axis fallback even for multiplication-drag failures)
+4. **`score`** — D = A × L × M within floating-point tolerance
+
+**Multiplication-drag edge cases (cases 6, 8, 13):** These cases fail because D = A × L × M falls below 0.3, even though no single axis is individually below 0.3. The `flag` field uses a worst-axis fallback that correctly identifies the offending axis regardless. The test checks `result.flag` rather than `axes.find(ax => !ax.passed)`.
+
+**Case 13:** "We're here to help! Don't worry, we'll take care of everything for you!" — fires both A (coercion — removes choice) and M (condescension — infantilizes) at equal weight 0.3. The server flags A because it comes first in the array when scores tie. The test accepts either axis.
+
+### Phase 2 Test Design
+
+Phase 2 uses LLM outputs, which vary between runs. The tests therefore:
+
+- **Do not** match exact strings
+- **Do** validate the full response schema (all required fields, correct types, valid enum values)
+- **Do** validate D = A × L × M arithmetic
+- **Do** lock specific semantic findings as text-level anchors — if a finding that appeared in the verified output disappears, the test fails
+
+**What "locked" means:** A finding is locked when it was verified by the user against a live API call and is considered non-negotiable. Locked findings check gap text content, not gap type classification (since the LLM may validly classify the same finding as `category_mismatch` or `category_not_applied` on different runs).
+
+### Locked Semantic Anchors
+
+**Immigration father (anchor 1):**
+- Combined household income (2050 + 800 = 2850) exceeds threshold (2200) — not calculated by institution
+- Missing category for caregiving urgency / child welfare
+- Legibility (L) ≤ 0.1 — letter acknowledges zero submitted facts
+- Children captured in person categories; institution's categories reflect income only
+
+**Custody mother (anchor 2):**
+- Employment finding — the word "work" does not appear in the report (LOCKED text anchor)
+- Landlord/eviction causal inversion — forced moves attributed to personal instability
+- Routine/schedule finding — labeled inconsistent despite verbatim documented evidence
+- category_mismatch present — instability = parental failure vs. structural eviction
+- Moral standing (M) ≤ 0.3 — report attributes structural harm to personal failing
+
+**Psychiatric patient (anchor 3):**
+- Disagreement-as-symptom — patient objection recorded as pathology, not data
+- Credentials invisibility — psychology degree absent from assessment
+- Discharge/insight criteria gap — patient cannot demonstrate "insight" with no definition given
+- category_mismatch or category_applied_incorrectly present (both valid for epistemic capture)
+- missing_category present (credentials or discharge path absent)
+
+### Axis Classification Tolerance
+
+For Phase 2 LLM outputs, multiple axis assignments are often defensible for the same gap. The test reflects this:
+
+| Gap | Accepted axes | Reasoning |
+|-----|--------------|-----------|
+| Psychiatric discharge criteria | A, L, or M | A = no defined path to choice; L = need invisible; M = "insight" as undefined power term |
+| Any gap | per-case | Lock the finding (text), not the classification (axis) |
+
+---
+
+*Document version: April 2026. Last updated after regression test suite completion (176 assertions, all passing).*
 *Contact: Mohamed Farag — info@kalam.ch — kalam.ch*
