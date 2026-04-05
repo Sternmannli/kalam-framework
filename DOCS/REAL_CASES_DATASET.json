@@ -5,7 +5,7 @@
     "created": "2026-04-05",
     "purpose": "Real-world court-verified cases of institutional blindness for testing and training the kalam-core gap detector (SP-007)",
     "note": "Every case is from a published court decision or official human rights body ruling. All sources are public and verifiable.",
-    "case_count": 21
+    "case_count": 22
   },
   "cases": [
     {
@@ -343,6 +343,24 @@
       "gap_type": "category_mismatch",
       "axis": "A",
       "gap_description": "The High Court mapped 'biological father' to 'rightful custodian' automatically, without weighing the specific circumstances: the father was arrested for the mother's death. The legal category of 'natural guardian' was applied as an absolute right rather than a contextual assessment. The child's actual safety and attachment were invisible behind the legal status of paternity."
+    },
+    {
+      "case_id": "CH-002",
+      "name": "KESB Aargau — Schizophrenia Visiting Rights Denial",
+      "court": "Swiss Federal Court (Bundesgericht)",
+      "application_no": "N/A",
+      "year": 2021,
+      "country": "Switzerland",
+      "source_url": "https://www.beobachter.ch/familie-freunde/kinder/schizophrenie-ist-kein-grund-fur-besuchsverbot-334034",
+      "domain": "custody",
+      "benchmark": true,
+      "benchmark_note": "First case tested live on the app. Dignity filter returned D=1.000 PASSED on this text — a known failure. This case is the primary benchmark.",
+      "institutional_text": "The father is diagnosed with schizophrenia. Standard visiting rights cannot normally be granted from the outset due to this diagnosis. The father has exhibited strange behavior as a consequence of his illness. Supervised visiting rights are ordered. An expert assessment is required to determine whether the children can visit the father. The mental illness constitutes a potential risk to the children's welfare.",
+      "person_situation": "A father with a psychiatric diagnosis who wants regular contact with his children. He has not harmed his children. No specific incident of endangerment has been documented. The institution has not explained how he concretely endangers his children's welfare. He is being denied standard visiting rights solely because of his diagnosis. He has appealed through every court level in Canton Aargau.",
+      "court_finding": "The Federal Court ruled that the mere existence of a mental illness is not sufficient grounds to deny standard visiting rights. The lower courts failed to explain how the father concretely endangered his children's welfare. Professor Thomas Geiser gave the Aargau judiciary a failing grade for its handling of persons with mental illness. Only 5% of appellants win against KESB at Federal Court level. The father won.",
+      "gap_type": "wrong_category",
+      "axis": "L",
+      "gap_description": "The institution mapped 'schizophrenia diagnosis' directly to 'parenting risk' without any individualized assessment. The diagnosis was treated as the complete description of the person. The system had no category for 'parent with a managed psychiatric condition who has never harmed his children.' The person was invisible behind the diagnosis."
     }
   ]
 }

@@ -770,5 +770,67 @@ For Phase 2 LLM outputs, multiple axis assignments are often defensible for the 
 
 ---
 
-*Document version: April 2026. Last updated after regression test suite completion (176 assertions, all passing).*
+---
+
+## BENCHMARK FAILURE: Dignity Filter Blind to Institutional Harm (2026-04-05)
+
+### What happened
+
+A real KESB decision from Canton Aargau was tested on the dignity filter (page 1). This decision was overturned by the Swiss Federal Court because it denied a father visiting rights solely based on a schizophrenia diagnosis — without documenting any concrete endangerment of the children.
+
+**Result: D = 1.000. PASSED. A = 1.00, L = 1.00, M = 1.00.**
+
+The filter saw: no coercion, no dismissal, no condescension. Perfect score.
+
+The Federal Court saw: institutional blindness. Diagnosis mapped to denial without evidence.
+
+### Root cause
+
+The dignity filter uses regex pattern matching. It detects harmful WORDS (coercion: "you must"; mockery: "obviously"; dismissal: "you failed"). Institutional text does not use these words. A KESB letter is polite, procedural, and professional. The harm is in the LOGIC — a diagnosis treated as a complete description of a person — not in the vocabulary.
+
+**Regex cannot detect logical errors in professional language. This is a design limitation, not a bug.**
+
+### Consequence
+
+The dignity filter (page 1) works for: checking AI chatbot responses for rude or coercive language.
+
+The dignity filter does NOT work for: analyzing institutional decisions for structural harm.
+
+**The gap detector (page 2) is the primary product for institutional analysis.** It compares two texts and finds structural gaps — which is what institutional harm actually is.
+
+### Benchmark case
+
+Case CH-002 has been added to `REAL_CASES_DATASET.json` with `"benchmark": true`. This is the primary test case. If the gap detector cannot catch this, it catches nothing real.
+
+---
+
+## SIMPLIFIED TAXONOMY (2026-04-05)
+
+### Problem
+
+The original 4-type classification (category_mismatch, missing_category, category_not_applied, category_applied_incorrectly) produced 33% strict accuracy on 21 cases. The LLM defaulted to `category_mismatch` in 16/21 cases. The types are too similar for reliable classification.
+
+### New taxonomy: 2 types
+
+| Type | Definition | Example |
+|------|-----------|---------|
+| `wrong_category` | The institution used a category that does not fit the person's reality | Schizophrenia diagnosis mapped to "cannot be a parent" — the lens exists but distorts |
+| `missing_category` | The institution had no category for what the person actually is | No field for "parent with managed psychiatric condition who has never harmed his children" — no lens at all |
+
+### Mapping from old to new
+
+| Old type | New type |
+|----------|----------|
+| category_mismatch | wrong_category |
+| category_applied_incorrectly | wrong_category |
+| missing_category | missing_category |
+| category_not_applied | missing_category |
+
+### Expected improvement
+
+Binary classification is easier for LLMs. Few-shot examples (one per type) in the prompt should further improve accuracy. Target: 70%+ strict accuracy on 22 cases.
+
+---
+
+*Document version: April 2026. Last updated after KESB benchmark failure discovery.*
 *Contact: Mohamed Farag — info@kalam.ch — kalam.ch*
